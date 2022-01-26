@@ -48,8 +48,10 @@ body {
     align-items: center;   
     font-size: 20px;
     justify-content: center;
+}
 
-
+.gridSquare:hover {
+    cursor: pointer;
 }
 
 .footer {

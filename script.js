@@ -16,12 +16,15 @@ let Gameboard = (() => {
         while (gridContainer.firstChild) {
             gridContainer.removeChild(gridContainer.lastChild);
         }
+        let index =0;
         for(let i = 0; i < _gameboardArray.length; i++){
             for (let j = 0; j < _gameboardArray.length; j++){
                 let gridSquare = document.createElement('div');
                 gridSquare.classList.add('gridSquare');
+                gridSquare.classList.add(index)
                 gridSquare.textContent = _gameboardArray[i][j];
                 gridContainer.appendChild(gridSquare);
+                index++;
             }
         }
 
@@ -36,4 +39,13 @@ let Gameboard = (() => {
 
 Gameboard.adjustGameBoard([0,0], 'bite me');
 
+function addListenersGridSquares() {
+    let sqaures = Array.from(document.querySelectorAll('.gridSquare'));
+    sqaures.forEach((square) => {
+        square.addEventListener('click', function(e) {
+            console.log(e.path);
+        })
+    })
+}
 
+addListenersGridSquares();
