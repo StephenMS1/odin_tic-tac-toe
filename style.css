@@ -46,7 +46,8 @@ body {
     height: 290px;
     margin: 0px;
     align-items: center;   
-    font-size: 20px;
+    font-size: 26px;
+    font-weight: 900;
     justify-content: center;
 }
 

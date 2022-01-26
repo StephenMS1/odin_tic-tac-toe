@@ -27,25 +27,26 @@ let Gameboard = (() => {
                 index++;
             }
         }
-
+        addListenersGridSquares();
     };
+    window.addEventListener('load', _createGameBoard());
     let adjustGameBoard = function(index, content){
-        console.log(index);
         _gameboardArray[index[0]][index[1]] = content;
         _createGameBoard();
     }; 
     return {adjustGameBoard};
 })();
 
-Gameboard.adjustGameBoard([0,0], 'bite me');
+
 
 function addListenersGridSquares() {
     let sqaures = Array.from(document.querySelectorAll('.gridSquare'));
     sqaures.forEach((square) => {
-        square.addEventListener('click', function(e) {
-            console.log(e.path);
+        square.addEventListener('click', function(e) { //function to populate clicked square
+            let squareNum = e.path[0].classList[1];
+            let squareIndex = [Math.floor(squareNum/3), squareNum%3];
+            console.log(squareIndex);
+            Gameboard.adjustGameBoard(squareIndex, 'yeah BOI');
         })
     })
 }
-
-addListenersGridSquares();
