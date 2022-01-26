@@ -31,6 +31,7 @@ let Gameboard = (() => {
     };
     window.addEventListener('load', _createGameBoard());
     let adjustGameBoard = function(index, content){
+        if (!(_gameboardArray[index[0]][index[1]]))
         _gameboardArray[index[0]][index[1]] = content;
         _createGameBoard();
     }; 
