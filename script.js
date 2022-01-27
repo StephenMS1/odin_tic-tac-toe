@@ -9,8 +9,30 @@ Players = (name) => {
     return {name, sayName}
 }
 
+let gameFlow = (() => {
+    let currentCounter = 'X';
+    addListenersGridSquares = () => {
+        let sqaures = Array.from(document.querySelectorAll('.gridSquare'));
+        sqaures.forEach((square) => {
+        square.addEventListener('click', function(e) { //function to populate clicked square
+            let squareNum = e.path[0].classList[1];
+            let squareIndex = [Math.floor(squareNum/3), squareNum%3];
+            Gameboard.adjustGameBoard(squareIndex, currentCounter);
+            if (currentCounter == 'X'){
+                currentCounter = 'O'
+            } else {
+                currentCounter = 'X'
+            }
+            checkForWinner(Gameboard.getGameBoard());
+        })
+    })
+    }
+    
+    return {addListenersGridSquares};
+})();
+
 let Gameboard = (() => {
-    let _gameboardArray = [['X','O',''],['','',''],['','','']]
+    let _gameboardArray = [['','',''],['','',''],['','','']]
     //function to adjust board, takes index in form [y,x] and the content to input
     let _createGameBoard = function () {
         while (gridContainer.firstChild) {
@@ -27,27 +49,21 @@ let Gameboard = (() => {
                 index++;
             }
         }
-        addListenersGridSquares();
+        gameFlow.addListenersGridSquares();
     };
+
     window.addEventListener('load', _createGameBoard());
+
     let adjustGameBoard = function(index, content){
-        if (!(_gameboardArray[index[0]][index[1]]))
+        if (!(_gameboardArray[index[0]][index[1]])){
         _gameboardArray[index[0]][index[1]] = content;
         _createGameBoard();
+        }
     }; 
-    return {adjustGameBoard};
+
+    let getGameBoard = () => {
+        return _gameboardArray;
+    }
+    return {adjustGameBoard, getGameBoard};
 })();
 
-
-
-function addListenersGridSquares() {
-    let sqaures = Array.from(document.querySelectorAll('.gridSquare'));
-    sqaures.forEach((square) => {
-        square.addEventListener('click', function(e) { //function to populate clicked square
-            let squareNum = e.path[0].classList[1];
-            let squareIndex = [Math.floor(squareNum/3), squareNum%3];
-            console.log(squareIndex);
-            Gameboard.adjustGameBoard(squareIndex, 'yeah BOI');
-        })
-    })
-}
