@@ -27,7 +27,24 @@ let gameFlow = (() => {
         })
     })
     }
-    
+    checkForWinner = (gameBoardArr) => {
+        console.log(gameBoardArr);
+        //function to check for winner on row
+        for (let i = 0; i < 3; i++) {
+            let lineString = gameBoardArr[i].join('');
+            let lineSet = new Set(gameBoardArr[i]);
+            if (lineSet.size == 1 && lineString){
+                console.log('a winner has been found')
+                return 
+            }
+
+            for (let j = 0; j < 3; j++){
+                if (i > 0){
+                    break;
+                }
+            }
+        }
+    }
     return {addListenersGridSquares};
 })();
 
