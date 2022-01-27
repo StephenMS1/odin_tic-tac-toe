@@ -34,13 +34,19 @@ let gameFlow = (() => {
             let lineString = gameBoardArr[i].join('');
             let lineSet = new Set(gameBoardArr[i]);
             if (lineSet.size == 1 && lineString){
-                console.log('a winner has been found')
-                return 
+                console.log('a horizontal winner has been found')
+                return
             }
 
             for (let j = 0; j < 3; j++){
                 if (i > 0){
                     break;
+                }
+                let columnArr = [gameBoardArr[0][j], gameBoardArr[1][j], gameBoardArr[2][j]];
+                let columnSet = new Set(columnArr);
+                if (columnSet.size == 1 && columnArr.join('')){
+                    console.log('there is a vertical winner');
+                    return;
                 }
             }
         }
