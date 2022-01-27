@@ -42,6 +42,22 @@ let gameFlow = (() => {
                 if (i > 0){
                     break;
                 }
+                if (j ==0){
+                    let nwseArr = [gameBoardArr[i][j], gameBoardArr[i+1][j+1], gameBoardArr[i+2][j+2]]
+                    let nwseSet = new Set(nwseArr);
+                    if (nwseSet.size == 1 && nwseArr.join('')){
+                        console.log('winner in nwse diagonal');
+                        return;
+                    }
+                }
+                if (j ==2){
+                    let nwseArr = [gameBoardArr[i][j], gameBoardArr[i+1][j-1], gameBoardArr[i+2][j-2]]
+                    let nwseSet = new Set(nwseArr);
+                    if (nwseSet.size == 1 && nwseArr.join('')){
+                        console.log('winner in nesw diagonal');
+                        return;
+                    }
+                }
                 let columnArr = [gameBoardArr[0][j], gameBoardArr[1][j], gameBoardArr[2][j]];
                 let columnSet = new Set(columnArr);
                 if (columnSet.size == 1 && columnArr.join('')){
