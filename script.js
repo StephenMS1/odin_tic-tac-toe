@@ -11,6 +11,8 @@ let gameFlow = (() => {
 
     let winner;
 
+    //function for determining which game mode is selected
+
     changeCounter = () => {
         if (currentCounter == 'X') {
             currentCounter = 'O'
@@ -76,8 +78,12 @@ let gameFlow = (() => {
             }
         }
         if (winner) {
-            console.log(`the winner is ${winner}!`);
+            _theresAWinner(winner);
         }
+    }
+    _theresAWinner = function (winner) {
+        // a function which flashes screen and brings up page congragulating winner
+        console.log(`winner is ${winner}`);
     }
     return {addListenersGridSquares, changeCounter};
 })();

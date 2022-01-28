@@ -9,15 +9,29 @@ body {
 .bannerTitle {
     display: flex;
     justify-content: center;
+    font-size: 50px;
 }
-.bannerPlayers {
-    display: flex;
-    justify-content: space-around;
+h1 {
+    margin: 0;
 }
 
-.enemy, .player {
+.bannerPlayers {
     display: flex;
-    gap: 10px
+    justify-content: center;
+    gap: 10%;
+    
+}
+
+button {
+    background-color: lightblue;
+    height: 60px;
+    width: 200px;
+    color: white;
+    font-size: 26px;
+}
+
+button:hover {
+    cursor: pointer;
 }
 
 .mainSpace {
