@@ -1,6 +1,3 @@
-//elements from document
-let gridContainer = document.querySelector('.gridContainer');
-
 
 Players = (name) => {
     let sayName = function() {
@@ -11,6 +8,8 @@ Players = (name) => {
 
 let gameFlow = (() => {
     let currentCounter = 'X';
+
+    let winner;
 
     changeCounter = () => {
         if (currentCounter == 'X') {
@@ -33,14 +32,16 @@ let gameFlow = (() => {
     }
 
     _checkForWinner = (gameBoardArr) => {
-        console.log(gameBoardArr);
+        let winner;
+
         //function to check for winner on row
         for (let i = 0; i < 3; i++) {
-            let lineString = gameBoardArr[i].join('');
-            let lineSet = new Set(gameBoardArr[i]);
-            if (lineSet.size == 1 && lineString){
+            let lineArr = gameBoardArr[i]
+            let lineSet = new Set(lineArr);
+            if (lineSet.size == 1 && lineArr.join('')){
                 console.log('a horizontal winner has been found')
-                return
+                winner = lineArr[i][0];
+                break;
             }
 
             for (let j = 0; j < 3; j++){
@@ -49,10 +50,11 @@ let gameFlow = (() => {
                 }
                 if (j ==0){
                     let nwseArr = [gameBoardArr[i][j], gameBoardArr[i+1][j+1], gameBoardArr[i+2][j+2]]
-                    let nwseSet = new Set(nwseArr);
+                    let nwseSet = new Set(nwseArr)
                     if (nwseSet.size == 1 && nwseArr.join('')){
                         console.log('winner in nwse diagonal');
-                        return;
+                        winner = gameBoardArr[i][j]
+                        break;
                     }
                 }
                 if (j ==2){
@@ -60,29 +62,38 @@ let gameFlow = (() => {
                     let nwseSet = new Set(nwseArr);
                     if (nwseSet.size == 1 && nwseArr.join('')){
                         console.log('winner in nesw diagonal');
-                        return;
+                        winner = gameBoardArr[i][j]
+                        break;
                     }
                 }
                 let columnArr = [gameBoardArr[0][j], gameBoardArr[1][j], gameBoardArr[2][j]];
                 let columnSet = new Set(columnArr);
                 if (columnSet.size == 1 && columnArr.join('')){
                     console.log('there is a vertical winner');
-                    return;
+                    winner = gameBoardArr[0][j]
+                    break;
                 }
             }
+        }
+        if (winner) {
+            console.log(`the winner is ${winner}!`);
         }
     }
     return {addListenersGridSquares, changeCounter};
 })();
 
 let Gameboard = (() => {
+    //gridContainer from document
+    let gridContainer = document.querySelector('.gridContainer');
+
     let _gameboardArray = [['','',''],['','',''],['','','']]
-    //function to adjust board, takes index in form [y,x] and the content to input
+
+    //createsBoard by creating divs within grid
     let _createGameBoard = function () {
         while (gridContainer.firstChild) {
             gridContainer.removeChild(gridContainer.lastChild);
         }
-        let index =0;
+        let index = 0;
         for(let i = 0; i < _gameboardArray.length; i++){
             for (let j = 0; j < _gameboardArray.length; j++){
                 let gridSquare = document.createElement('div');
@@ -96,8 +107,10 @@ let Gameboard = (() => {
         gameFlow.addListenersGridSquares();
     };
 
+    //create gameboard instantly
     window.addEventListener('load', _createGameBoard());
 
+    //takes an index of board, if empty places next counter, increments counter & updates board
     let adjustGameBoard = function(index, currentCounter){
         if (!(_gameboardArray[index[0]][index[1]])){
             _gameboardArray[index[0]][index[1]] = currentCounter;
@@ -106,9 +119,15 @@ let Gameboard = (() => {
         }
     }; 
 
+    //resetGameBoard
+    let resetGameBoard = function(){
+        _gameboardArray = [['','',''],['','','',],['','','']];
+        _createGameBoard();
+    }
+
+    //returns gameBoard array
     let getGameBoard = () => {
         return _gameboardArray;
     }
-    return {adjustGameBoard, getGameBoard};
+    return {adjustGameBoard, getGameBoard, resetGameBoard};
 })();
-
