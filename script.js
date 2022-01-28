@@ -11,23 +11,28 @@ Players = (name) => {
 
 let gameFlow = (() => {
     let currentCounter = 'X';
+
+    changeCounter = () => {
+        if (currentCounter == 'X') {
+            currentCounter = 'O'
+        } else {
+            currentCounter = 'X'
+        }
+    }
+    
     addListenersGridSquares = () => {
         let sqaures = Array.from(document.querySelectorAll('.gridSquare'));
         sqaures.forEach((square) => {
         square.addEventListener('click', function(e) { //function to populate clicked square
             let squareNum = e.path[0].classList[1];
             let squareIndex = [Math.floor(squareNum/3), squareNum%3];
-            Gameboard.adjustGameBoard(squareIndex, currentCounter);
-            if (currentCounter == 'X'){
-                currentCounter = 'O'
-            } else {
-                currentCounter = 'X'
-            }
-            checkForWinner(Gameboard.getGameBoard());
+            let lastCounter = Gameboard.adjustGameBoard(squareIndex, currentCounter);
+            _checkForWinner(Gameboard.getGameBoard());
         })
     })
     }
-    checkForWinner = (gameBoardArr) => {
+
+    _checkForWinner = (gameBoardArr) => {
         console.log(gameBoardArr);
         //function to check for winner on row
         for (let i = 0; i < 3; i++) {
@@ -67,7 +72,7 @@ let gameFlow = (() => {
             }
         }
     }
-    return {addListenersGridSquares};
+    return {addListenersGridSquares, changeCounter};
 })();
 
 let Gameboard = (() => {
@@ -93,10 +98,11 @@ let Gameboard = (() => {
 
     window.addEventListener('load', _createGameBoard());
 
-    let adjustGameBoard = function(index, content){
+    let adjustGameBoard = function(index, currentCounter){
         if (!(_gameboardArray[index[0]][index[1]])){
-        _gameboardArray[index[0]][index[1]] = content;
-        _createGameBoard();
+            _gameboardArray[index[0]][index[1]] = currentCounter;
+            _createGameBoard();
+            gameFlow.changeCounter();
         }
     }; 
 
