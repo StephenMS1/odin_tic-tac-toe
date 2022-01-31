@@ -30,6 +30,10 @@ button {
     font-size: 26px;
 }
 
+.selectedMode {
+    background-color: darkblue;
+}
+
 button:hover {
     cursor: pointer;
 }

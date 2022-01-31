@@ -11,7 +11,34 @@ let gameFlow = (() => {
 
     let winner;
 
+    let gameMode;
+
     //function for determining which game mode is selected
+    
+    playModeBtns = Array.from(document.querySelectorAll('.play'));
+    console.log(playModeBtns);
+    playModeBtns.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            let gamePlay = e.srcElement;
+            
+            for (let i =0; i < playModeBtns.length; i++){
+                playModeBtns[i].classList.remove('selectedMode');
+            }
+            gamePlay.classList.add('selectedMode');
+            if (gameMode != gamePlay.textContent){
+                gameMode = gamePlay.textContent;
+                _commenceGame(gameMode);
+            }
+            
+        })
+    })
+
+    _commenceGame = (mode) => {
+        Gameboard.resetGameBoard();
+        if (mode == 'Two Players') {
+            Gameboard._createGameBoard();
+        }
+    }
 
     changeCounter = () => {
         if (currentCounter == 'X') {
@@ -114,7 +141,7 @@ let Gameboard = (() => {
     };
 
     //create gameboard instantly
-    window.addEventListener('load', _createGameBoard());
+    //window.addEventListener('load', _createGameBoard());
 
     //takes an index of board, if empty places next counter, increments counter & updates board
     let adjustGameBoard = function(index, currentCounter){
@@ -135,5 +162,5 @@ let Gameboard = (() => {
     let getGameBoard = () => {
         return _gameboardArray;
     }
-    return {adjustGameBoard, getGameBoard, resetGameBoard};
+    return {adjustGameBoard, getGameBoard, resetGameBoard, _createGameBoard};
 })();
