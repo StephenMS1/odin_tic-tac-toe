@@ -41,7 +41,7 @@ let gameFlow = (() => {
         nextTurn();
     }
 
-    computerTakeTurn = () => {
+    computerTakeTurnEasy = () => {
         let array = Gameboard.getGameBoard();
         for (let i = 0; i < 9; i++){
             let ind1 = Math.floor(i/3);
@@ -53,6 +53,26 @@ let gameFlow = (() => {
         }
     }
 
+    computerTakeTurnMedium = () => {
+        let array = Gameboard.getGameBoard();
+        getLocation = () => {
+            let squareNum = Math.floor(Math.random()*9);
+            let ind1 = Math.floor(squareNum/3);
+            let ind2 = squareNum % 3;
+            return [ind1, ind2];
+        }
+        let [ind1, ind2] = getLocation();
+        if (array[ind1][ind2] == '') {
+            Gameboard.adjustGameBoard([ind1, ind2], currentCounter);
+        }
+        else {
+            computerTakeTurnMedium();
+        }
+
+    }
+
+
+
     playerTakeTurn = () => {
         addListenersGridSquares();
     }
@@ -62,12 +82,15 @@ let gameFlow = (() => {
 
     nextTurn = () => {
         turn += 1;
-        if (gameMode == 'Two Players'){
+        if (turn == 10){
+            console.log('no winners?');
+        }
+        else if (gameMode == 'Two Players'){
             playerTakeTurn();
         }
         else {
             if (turn % 2 == 0) {
-                computerTakeTurn();
+                computerTakeTurnMedium();
             }
             else {
                 playerTakeTurn();
