@@ -12,32 +12,72 @@ let gameFlow = (() => {
     let winner;
 
     let gameMode;
+    
 
     //function for determining which game mode is selected
     
-    playModeBtns = Array.from(document.querySelectorAll('.play'));
-    console.log(playModeBtns);
+    let playModeBtns = Array.from(document.querySelectorAll('.play'));
+
     playModeBtns.forEach((button) => {
         button.addEventListener('click', (e) => {
             let gamePlay = e.srcElement;
             
-            for (let i =0; i < playModeBtns.length; i++){
+            for (let i = 0; i < playModeBtns.length; i++){
                 playModeBtns[i].classList.remove('selectedMode');
             }
             gamePlay.classList.add('selectedMode');
             if (gameMode != gamePlay.textContent){
                 gameMode = gamePlay.textContent;
-                _commenceGame(gameMode);
+                turn = 0;
+                _commenceGame();
             }
             
         })
     })
 
-    _commenceGame = (mode) => {
+    _commenceGame = () => {
         Gameboard.resetGameBoard();
-        if (mode == 'Two Players') {
-            Gameboard._createGameBoard();
+        currentCounter = 'X';
+        Gameboard._createGameBoard();
+        nextTurn();
+        
+    }
+
+    computerTakeTurn = () => {
+        let array = Gameboard.getGameBoard();
+        for (let i = 0; i < 9; i++){
+            let ind1 = Math.floor(i/3);
+            let ind2 = i % 3;
+            if (array[ind1][ind2] == '') {
+                Gameboard.adjustGameBoard([ind1, ind2], currentCounter);
+                _checkForWinner(Gameboard.getGameBoard());
+                break;
+            }
         }
+    }
+
+    playerTakeTurn = () => {
+        addListenersGridSquares();
+    }
+
+    //turn logic
+    turn = 0;
+
+    nextTurn = () => {
+        turn += 1;
+        if (gameMode == 'Two Players'){
+            playerTakeTurn();
+        }
+        else {
+            if (turn % 2 == 0) {
+                computerTakeTurn();
+            }
+            else {
+                playerTakeTurn();
+            }
+        }
+        
+        
     }
 
     changeCounter = () => {
@@ -54,7 +94,7 @@ let gameFlow = (() => {
         square.addEventListener('click', function(e) { //function to populate clicked square
             let squareNum = e.path[0].classList[1];
             let squareIndex = [Math.floor(squareNum/3), squareNum%3];
-            let lastCounter = Gameboard.adjustGameBoard(squareIndex, currentCounter);
+            Gameboard.adjustGameBoard(squareIndex, currentCounter);
             _checkForWinner(Gameboard.getGameBoard());
         })
     })
@@ -104,6 +144,7 @@ let gameFlow = (() => {
                 }
             }
         }
+        nextTurn();
         if (winner) {
             _theresAWinner(winner);
         }
@@ -137,11 +178,10 @@ let Gameboard = (() => {
                 index++;
             }
         }
-        gameFlow.addListenersGridSquares();
+        //gameFlow.addListenersGridSquares();
     };
 
-    //create gameboard instantly
-    //window.addEventListener('load', _createGameBoard());
+   
 
     //takes an index of board, if empty places next counter, increments counter & updates board
     let adjustGameBoard = function(index, currentCounter){
@@ -155,7 +195,6 @@ let Gameboard = (() => {
     //resetGameBoard
     let resetGameBoard = function(){
         _gameboardArray = [['','',''],['','','',],['','','']];
-        _createGameBoard();
     }
 
     //returns gameBoard array
