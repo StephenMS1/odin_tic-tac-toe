@@ -28,19 +28,17 @@ let gameFlow = (() => {
             gamePlay.classList.add('selectedMode');
             if (gameMode != gamePlay.textContent){
                 gameMode = gamePlay.textContent;
-                turn = 0;
                 _commenceGame();
             }
-            
         })
     })
 
     _commenceGame = () => {
+        turn = 0;
         Gameboard.resetGameBoard();
         currentCounter = 'X';
         Gameboard._createGameBoard();
         nextTurn();
-        
     }
 
     computerTakeTurn = () => {
@@ -50,7 +48,6 @@ let gameFlow = (() => {
             let ind2 = i % 3;
             if (array[ind1][ind2] == '') {
                 Gameboard.adjustGameBoard([ind1, ind2], currentCounter);
-                _checkForWinner(Gameboard.getGameBoard());
                 break;
             }
         }
@@ -76,8 +73,6 @@ let gameFlow = (() => {
                 playerTakeTurn();
             }
         }
-        
-        
     }
 
     changeCounter = () => {
@@ -95,7 +90,7 @@ let gameFlow = (() => {
             let squareNum = e.path[0].classList[1];
             let squareIndex = [Math.floor(squareNum/3), squareNum%3];
             Gameboard.adjustGameBoard(squareIndex, currentCounter);
-            _checkForWinner(Gameboard.getGameBoard());
+            //_checkForWinner(Gameboard.getGameBoard());
         })
     })
     }
@@ -149,11 +144,13 @@ let gameFlow = (() => {
             _theresAWinner(winner);
         }
     }
+
     _theresAWinner = function (winner) {
         // a function which flashes screen and brings up page congragulating winner
         console.log(`winner is ${winner}`);
     }
-    return {addListenersGridSquares, changeCounter};
+
+    return {addListenersGridSquares, changeCounter, _checkForWinner};
 })();
 
 let Gameboard = (() => {
@@ -189,6 +186,7 @@ let Gameboard = (() => {
             _gameboardArray[index[0]][index[1]] = currentCounter;
             _createGameBoard();
             gameFlow.changeCounter();
+            _checkForWinner(Gameboard.getGameBoard());
         }
     }; 
 
