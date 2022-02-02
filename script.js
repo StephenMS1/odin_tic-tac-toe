@@ -27,13 +27,21 @@ let gameFlow = (() => {
             gamePlay.classList.add('selectedMode');
             if (gameMode != gamePlay.textContent){
                 gameMode = gamePlay.textContent;
-                _commenceGame();
+                _commenceGame(gameMode);
             }
         })
     })
 
+    let difficultyControl = document.querySelector('.difficultyControl');
+
     _commenceGame = () => {
         turn = 0;
+        if (gameMode == 'Single Player') {
+            difficultyControl.style.visibility = 'visible';
+        }
+        else {
+            difficultyControl.style.visibility = 'hidden';
+        }
         Gameboard.resetGameBoard();
         currentCounter = 'X';
         Gameboard._createGameBoard();
@@ -76,6 +84,16 @@ let gameFlow = (() => {
         addListenersGridSquares();
     }
 
+    let difficulty = document.querySelector('#difficulty');
+    let selectedDifficulty = difficulty.value;
+
+    difficulty.addEventListener('change', () => {
+        if (difficulty.value != selectedDifficulty){
+            selectedDifficulty = difficulty.value;
+            _commenceGame();
+        }
+    })
+
     //turn logic
     turn = 0;
 
@@ -89,7 +107,13 @@ let gameFlow = (() => {
         }
         else {
             if (turn % 2 == 0) {
-                setTimeout(computerTakeTurnMedium, 300);
+                if (difficulty.value == 'easy'){
+                    setTimeout(computerTakeTurnEasy, 300);
+                }
+                else if (difficulty.value =='medium'){
+                    setTimeout(computerTakeTurnMedium, 300);
+                }
+                
             }
             else {
                 playerTakeTurn();
@@ -125,7 +149,6 @@ let gameFlow = (() => {
             let lineArr = gameBoardArr[i]
             let lineSet = new Set(lineArr);
             if (lineSet.size == 1 && lineArr.join('')){
-                console.log('a horizontal winner has been found')
                 winner = lineArr[i][0];
                 break;
             }
@@ -138,7 +161,6 @@ let gameFlow = (() => {
                     let nwseArr = [gameBoardArr[i][j], gameBoardArr[i+1][j+1], gameBoardArr[i+2][j+2]]
                     let nwseSet = new Set(nwseArr)
                     if (nwseSet.size == 1 && nwseArr.join('')){
-                        console.log('winner in nwse diagonal');
                         winner = gameBoardArr[i][j]
                         break;
                     }
@@ -147,7 +169,6 @@ let gameFlow = (() => {
                     let nwseArr = [gameBoardArr[i][j], gameBoardArr[i+1][j-1], gameBoardArr[i+2][j-2]]
                     let nwseSet = new Set(nwseArr);
                     if (nwseSet.size == 1 && nwseArr.join('')){
-                        console.log('winner in nesw diagonal');
                         winner = gameBoardArr[i][j]
                         break;
                     }
@@ -155,7 +176,6 @@ let gameFlow = (() => {
                 let columnArr = [gameBoardArr[0][j], gameBoardArr[1][j], gameBoardArr[2][j]];
                 let columnSet = new Set(columnArr);
                 if (columnSet.size == 1 && columnArr.join('')){
-                    console.log('there is a vertical winner');
                     winner = gameBoardArr[0][j]
                     break;
                 }
@@ -176,7 +196,7 @@ let gameFlow = (() => {
         let resultScreen = document.querySelector('.resultScreen');
         let winnerText = document.querySelector('.winnerText');
         if (winner){
-            winnerText.textContent = `Congragulations Player ${winner}`;
+            winnerText.textContent = `Player ${winner} Wins!`;
         }
         else {
             winnerText.textContent = `That's a Draw!`;

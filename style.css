@@ -32,6 +32,7 @@ body {
     align-items: center;
     justify-content: space-evenly;
     margin-bottom: 10%;
+    font-size: 36px;
 }
 
 .banner {
@@ -84,6 +85,22 @@ button:hover {
     justify-content: center;
     align-items: center;
     
+}
+
+.difficultyControl {
+    visibility: hidden;
+    display: flex;
+    width: 200px;
+    font-size: 20px;
+    gap: 15px
+}
+
+option {
+    font-size: 20px;
+}
+
+.emptyDiv {
+    width: 200px;
 }
 
 .gridContainer {
