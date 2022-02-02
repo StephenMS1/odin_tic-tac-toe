@@ -1,4 +1,3 @@
-
 Players = (name) => {
     let sayName = function() {
         return `My name is ${name}`;
@@ -83,14 +82,14 @@ let gameFlow = (() => {
     nextTurn = () => {
         turn += 1;
         if (turn == 10){
-            console.log('no winners?');
+            _theresAWinner('');
         }
         else if (gameMode == 'Two Players'){
             playerTakeTurn();
         }
         else {
             if (turn % 2 == 0) {
-                computerTakeTurnMedium();
+                setTimeout(computerTakeTurnMedium, 300);
             }
             else {
                 playerTakeTurn();
@@ -162,16 +161,38 @@ let gameFlow = (() => {
                 }
             }
         }
-        nextTurn();
         if (winner) {
             _theresAWinner(winner);
         }
+        else {
+            nextTurn();
+        }
+        
+        
     }
 
     _theresAWinner = function (winner) {
         // a function which flashes screen and brings up page congragulating winner
-        console.log(`winner is ${winner}`);
+        let resultScreen = document.querySelector('.resultScreen');
+        let winnerText = document.querySelector('.winnerText');
+        if (winner){
+            winnerText.textContent = `Congragulations Player ${winner}`;
+        }
+        else {
+            winnerText.textContent = `That's a Draw!`;
+        }
+        resultScreen.style.display = 'flex';
     }
+
+    //reset and reload the board / number of turns when a new game is commenced.
+    let playAgainBtn = document.querySelector('.playAgain');
+    playAgainBtn.addEventListener('click', () => {
+        _commenceGame();
+        let resultScreen = document.querySelector('.resultScreen');
+        resultScreen.style.display = 'none';
+        let winnerText = document.querySelector('.winnerText');
+        winnerText.textContent = '';
+    })
 
     return {addListenersGridSquares, changeCounter, _checkForWinner};
 })();
@@ -198,7 +219,7 @@ let Gameboard = (() => {
                 index++;
             }
         }
-        //gameFlow.addListenersGridSquares();
+        
     };
 
    
