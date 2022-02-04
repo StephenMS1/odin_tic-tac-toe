@@ -78,7 +78,151 @@ let gameFlow = (() => {
 
     }
 
+    computerTakeTurnHard = () => {
+        let bestMove = findBestMove(Gameboard.getGameBoard());
+        console.log(bestMove);
+        let ind1 = bestMove.row;
+        let ind2 = bestMove.col;
 
+        Gameboard.adjustGameBoard([ind1, ind2], currentCounter);
+    }
+
+    //logic for unbeatable minimax AI
+
+    function anyMovesLeft(gameBoard){
+        for (let i =0; i <3; i++){
+            for(let j = 0; j < 3; j++){
+                if (!(gameBoard[i][j])){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function evaluate(gameBoard){
+        for (let i = 0; i < 3; i++){
+            if (gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][0] == gameBoard[i][2]){
+                if (gameBoard[i][0] == 'X'){
+                    return -10;
+                }
+                else {
+                    return 10;
+                }
+            }
+        }
+        for (let j = 0; j < 3; j++){
+            if (gameBoard[0][j] == gameBoard[1][j]  && gameBoard[0][j] == gameBoard[2][j]){
+                if (gameBoard[0][j] == 'X'){
+                    return -10;
+                }
+                else {
+                    return 10;
+                }
+            }      
+        }
+        if (gameBoard[0][0] == gameBoard[1][1] && gameBoard[0][0] == gameBoard[2][2]){
+            if (gameBoard[0][0] == 'X') {
+                return -10;
+            }
+            else {
+                return 10;
+            }
+        }
+        if (gameBoard[0][2] == gameBoard[1][1] && gameBoard[0][2] == gameBoard[2][0]){
+            if (gameBoard[0][2] == 'X') {
+                return -10;
+            }
+            else {
+                return 10;
+            }
+        }
+        return 0;
+    }
+
+    function minimax(gameBoard, depth, isMax){
+        let score = evaluate(gameBoard);
+
+        if (score == 10) {
+            return score - depth;
+        }
+
+        if (score == -10) {
+            return score + depth;
+        }
+
+        if (!(anyMovesLeft(gameBoard))) {
+            return 0;
+        }
+
+        if(isMax) {
+            let best = -1000;
+
+            for(let i = 0; i <3; i++){
+                for (let j = 0; j <3; j++){
+                    if (!(gameBoard[i][j])){
+
+                        gameBoard[i][j] = 'O';
+
+                        best = Math.max(best, minimax(gameBoard, depth +1, !isMax));
+                        
+                        gameBoard[i][j] = '';
+                        
+                    }
+                }
+                
+            } 
+            console.log(best);
+            return best;
+        }
+        else {
+            let best = 1000;
+
+            for (let i =0 ;i < 3; i++){
+                for (let j = 0; j < 3; j++){
+                    if (!(gameBoard[i][j])){
+                        gameBoard[i][j] = 'X';
+
+                        best = Math.min(best, minimax(gameBoard, depth +1, !isMax));
+
+                        gameBoard[i][j] = '';
+                    }
+                }
+            }
+            console.log(best);
+            return best;
+        }
+
+    }
+
+    function findBestMove(gameBoard){
+        let bestValue = -1000
+        let bestMove = {};
+        bestMove.row = -1;
+        bestMove.col = -1;
+
+        for(let i = 0; i < 3; i++){
+            for (let j = 0; j < 3; j++){
+                if (!(gameBoard[i][j])){
+
+                    gameBoard[i][j] = 'O';
+
+                    let moveVal = minimax(Gameboard.getGameBoard(), 0, false);
+
+                    gameBoard[i][j] = ''
+
+                    if (moveVal > bestValue) {
+                        bestValue = moveVal;
+                        bestMove.row = i;
+                        bestMove.col = j;
+                    }
+                }
+            }
+        }
+        return bestMove;
+    }
+
+    //end of minimax logic
 
     playerTakeTurn = () => {
         addListenersGridSquares();
@@ -112,6 +256,9 @@ let gameFlow = (() => {
                 }
                 else if (difficulty.value =='medium'){
                     setTimeout(computerTakeTurnMedium, 300);
+                }
+                else if (difficulty.value =='impossible'){
+                    setTimeout(computerTakeTurnHard, 300);
                 }
                 
             }
